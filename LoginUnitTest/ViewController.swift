@@ -9,17 +9,30 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
+    @IBOutlet weak var username: UITextField!
+    @IBOutlet weak var password: UITextField!
+    var loginService: LoginService!
+    @IBOutlet weak var loginButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        loginService = LoginServiceDelegate(delegate: self)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @IBAction func tappedLogin(_ sender: UIButton) {
+        loginService.login(withUsername: username.text, password: password.text)
     }
-
-
 }
+
+extension ViewController: LoginActionService {
+    func loginSuccessfull(withUser user: User) {
+        showAlert(withTitle: "Success", message: "Hello \(user.name)")
+    }
+    
+    func handle(error: Error) {
+        showAlert(withTitle: "Error", message: error.localizedDescription)
+    }
+}
+
 
